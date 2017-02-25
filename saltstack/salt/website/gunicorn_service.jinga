@@ -1,0 +1,19 @@
+{% set gunicorn = pillar.get('gunicorn', {}) -%}
+{% set user = pillar.get('user', root) -%}
+{% set group = pillar.get('group', root) -%}
+{% set project_name = pillar.get('project_name', project_name) -%}
+{% set wsgi_app_loc = gunicorn.get('wsgi_app_loc', wsgi_app_loc) -%}
+
+
+[Unit]
+Description=gunicorn_{{ project_name }} daemon
+After=network.target
+
+[Service]
+User={{ user }}
+Group={{ group }}
+WorkingDirectory=/home/ubuntu/sites/{{ project_name }}/source
+ExecStart=/home/ubuntu/sites/{{ project_name }}/virtualenv/bin/gunicorn --log-file /home/ubuntu/sites/{{ project_name }}/logs/gunicornlogs.txt --workers 3 --bind 127.0.0.1:8887 {{ wsgi_app_loc }}:application
+
+[Install]
+WantedBy=multi-user.target
