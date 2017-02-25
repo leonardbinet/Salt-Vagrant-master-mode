@@ -30,11 +30,11 @@ First, edit 'settings.sls' and 'secrets.sls' pillar files.
 
 The only information you have to provide is: in 'settings.sls'
 
-- project_name
-- git_rev
-- git_repo
-- DJANGO_SETTINGS_MODULE
-- wsgi_app_loc
+- **project_name** : no impact on application, just avoid spaces or special characters
+- **git_rev**: your repo's branch name: for instance "master"
+- **git_repo**: your repo's URL
+- **DJANGO_SETTINGS_MODULE**: your application settings location, for instance: 'myapp.settings' (python import style: '.', not '/')
+- **wsgi_app_loc**: for instance: 'myapp.wsgi'
 
 Then if your application needs somes secrets to be included in your environment variables, just add them to the 'secrets.sls' pillar file.
 
@@ -68,14 +68,18 @@ About secrets. I've tried to make it easy to add secrets and avoid to add it in 
 I couldn't yet set environment variables for gunicorn. I tryed:
 - putting it in virtualenv activate script: doesn't work
 - putting it in bashrc or profile.d: didn't work eiter
-Current workaround:
+
+**Current workaround:**
 - writing it in a json file, that is put in source folder, and read from django settings module
-Ideal solution:
+
+**Ideal solution:**
 - would be to read it directly from environment
 
 ### Logs
 - currently django logs seems to be created by root user, and then cannot be edited by gunicorn's www-data user. (might be collectstatic or bower commands)
-Current workaround:
+
+**Current workaround:**
 - salt state to change permissions on django.logs file
-Ideal solution:
+
+**Ideal solution:**
 - find which command creates automatically this root-owned django.logs
