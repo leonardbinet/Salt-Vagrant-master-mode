@@ -30,3 +30,5 @@ You can then run the following commands to log into the Salt Master and begin us
 vagrant ssh master
 sudo salt \* test.ping
 ```
+
+## Requirements on your Django structure

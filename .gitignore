@@ -1,7 +1,6 @@
 .vagrant
 
 # Secrets
-saltstack/pillar/secrets.sls
 saltstack/salt/secret.json
 
 # Other files
