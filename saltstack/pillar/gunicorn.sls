@@ -1,2 +1,3 @@
+{% from 'settings.sls' import wsgi_app_loc %}
 gunicorn:
-  wsgi_app_loc: sncfweb.wsgi
+  wsgi_app_loc: {{ wsgi_app_loc }}

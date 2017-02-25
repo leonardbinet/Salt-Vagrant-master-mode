@@ -1,6 +1,7 @@
 # Replace values to match your requirements
 
 {% set project_name = 'SNCF_project_website' %} # no space or special character
+{% set wsgi_app_loc = 'sncfweb.wsgi' %}
 git_rev: master
 git_repo: https://github.com/leonardbinet/SNCF_project_website
 DJANGO_SETTINGS_MODULE: sncfweb.settings.prod
@@ -12,9 +13,9 @@ DJANGO_SETTINGS_MODULE: sncfweb.settings.prod
 {% set project_source = project_dir+'/source' %}
 {% set project_venv = project_dir+'/virtualenv' %}
 {% set project_logs = project_dir+'/logs' %}
-{% set static = '/var/www/static' %}
+{% set project_static = '/var/www' %}
 
-static: {{ static }}
+project_static: {{ project_static }}
 
 user: www-data
 group: www-data

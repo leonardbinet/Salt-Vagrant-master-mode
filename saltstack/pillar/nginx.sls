@@ -1,5 +1,5 @@
 {% from 'settings.sls' import project_name %}
-{% from 'settings.sls' import static %}
+{% from 'settings.sls' import project_static %}
 
 nginx:
   ng:
@@ -40,7 +40,7 @@ nginx:
                 - 80
               - location /static/:
                 - root:
-                  - {{ static }}
+                  - {{ project_static }}
               #- location ~ .htm:
                 #- try_files:
                 #  - $uri

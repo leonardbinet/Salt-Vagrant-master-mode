@@ -42,7 +42,7 @@ cmd_update_bower_files:
 
 components-directory:
   file.directory:
-    - name: /home/ubuntu/sites/{{ pillar['project_name'] }}/source/components/bower_components
+    - name: {{ pillar['project_source'] }}/components/bower_components
     - makedirs: True
     - user: {{ pillar['user'] }}
     - group: {{ pillar['group'] }}

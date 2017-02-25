@@ -1,5 +1,4 @@
 # check if static file is present with right permissions
-
 users:
   user.present:
     - name: www-data
@@ -9,14 +8,14 @@ users:
 
 static-directory:
   file.directory:
-    - name: {{ pillar['static'] }}/static
+    - name: {{ pillar['project_static'] }}/static
     - makedirs: True
     - user: www-data
     - group: www-data
-    - mode: 755
+    - mode: 777
 
 static_environment:
    environ.setenv:
      - name: static
-     - value: {{ pillar['static'] }}
+     - value: {{ pillar['project_static'] }}
      - update_minion: True

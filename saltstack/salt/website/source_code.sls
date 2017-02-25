@@ -1,22 +1,20 @@
 project-directory:
   file.directory:
-    - name: /home/ubuntu/sites/{{ pillar['project_name'] }}
+    - name: {{ pillar['project_dir'] }}
     - makedirs: True
     - user: {{ pillar['user'] }}
     - group: {{ pillar['group'] }}
-
 
 source-directory:
   file.directory:
-    - name: /home/ubuntu/sites/{{ pillar['project_name'] }}/source
+    - name: {{ pillar['project_source'] }}
     - makedirs: True
     - user: {{ pillar['user'] }}
     - group: {{ pillar['group'] }}
 
-
 logs-directory:
   file.directory:
-    - name: /home/ubuntu/sites/{{ pillar['project_name'] }}/logs
+    - name: {{ pillar['project_logs'] }}
     - makedirs: True
     - user: {{ pillar['user'] }}
     - group: {{ pillar['group'] }}
@@ -24,7 +22,7 @@ logs-directory:
 
 virtualenv-directory:
   file.directory:
-    - name: /home/ubuntu/sites/{{ pillar['project_name'] }}/virtualenv
+    - name: {{ pillar['project_venv'] }}
     - makedirs: True
     - user: {{ pillar['user'] }}
     - group: {{ pillar['group'] }}
@@ -33,6 +31,7 @@ website source code:
   git.latest:
     - name: {{ pillar['git_repo'] }}
     - branch: master
-    - target: /home/ubuntu/sites/{{ pillar['project_name'] }}/source
+    - target: {{ pillar['project_source'] }}
+    - force_reset: True
     #- require:
     #  - project-directory
