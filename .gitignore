@@ -3,7 +3,7 @@
 # Secrets
 saltstack/salt/secret.json
 # Now that the template is shown, do not show my real secrets
-saltstack/pillar/secrets.sls
+# saltstack/pillar/secrets.sls
 
 
 # Other files
