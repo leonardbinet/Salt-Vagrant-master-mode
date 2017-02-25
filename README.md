@@ -55,8 +55,8 @@ salt '*' state.apply
 
 ### Enjoy deploy
 Your website should be available on the minions' IPs:
-- 192.168.50.11: minion1
-- 192.168.50.12: minion2
+- minion1: 192.168.50.11
+- minion2: 192.168.50.12
 
 ## Requirements on your Django structure
 In order to work properly, these salt states assume:

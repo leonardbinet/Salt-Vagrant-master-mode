@@ -13,6 +13,25 @@ static-directory:
     - user: www-data
     - group: www-data
     - mode: 777
+    - dir_mode: 777
+    - recurse:
+      - user
+      - group
+      - mode
+# recursive chmod seems to be broken, for now: manually
+static-directory_man:
+  file.directory:
+    - name: {{ pillar['project_static'] }}
+    - user: www-data
+    - group: www-data
+    - mode: 777
+
+static-directory_man_2:
+  file.directory:
+    - name: /var
+    - user: www-data
+    - group: www-data
+    - mode: 777
 
 static_environment:
    environ.setenv:

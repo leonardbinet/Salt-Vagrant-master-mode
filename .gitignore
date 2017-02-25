@@ -9,3 +9,6 @@ saltstack/pillar/settings.sls
 
 # Other files
 reminder.md
+
+# Logs
+*.log
