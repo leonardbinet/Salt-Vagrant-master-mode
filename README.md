@@ -2,9 +2,12 @@
 
 
 ## Overview
-The Vagrant files launch a EC2 instance and installs salt-master on it.
+The Vagrant files launch three EC2 instances:
+- master instance: installs salt-master on it.
+- website-minion instance: installs salt-minion on it.
+- etl-minion instance: installs salt-minion on it.
 
-Then, you will ssh into the salt-master and launch a salt-cloud command which will create two EC2 instance configured as salt-minions:
+Then, you will ssh into the salt-master and launch states to configure environments for:
 - a django application providing a website and an api
 - an application that will regularly extract data from transilien's API, apply transformations, and save what is useful in a Dynamo database.
 
@@ -44,35 +47,23 @@ The only information you have to provide is: in 'settings.sls'
 
 Then if your application needs somes secrets to be included in your environment variables, just add them to the 'secrets.sls' pillar file.
 
-## Instructions to launch salt-master on EC2 with Vagrant
+## Instructions to launch instances on EC2 with Vagrant
 
 ```
 vagrant plugin install vagrant-vbguest
 vagrant plugin install vagrant-aws
-vagrant up --provider=aws
+vagrant up
 ```
 
-This will launch an EC2 instance on AWS. This instance will be configured with an ubuntu xenial64 image. It will also be provisioned with salt, so it is configured as a salt master.
+This will launch EC2 instances on AWS. They will be configured with ubuntu xenial64 images.
 
-Remember that `pillar` and `salt` folder will be synced between your local machine and the remote EC2 instance.
+Remember that `pillar` and `salt` folder will be synced between your local machine and the remote master EC2 instance.
 
-## Instructions to launch salt-minions on EC2 with salt-cloud
-First, connect to salt-master:
-```
-vagrant up --provider=aws
-```
-Then launch salt command:
-```
-# become sudo user
-sudo su
+## Instructions to apply configuration to salt-minions on EC2 with Salt
 
-salt blablabal
-```
-
-
-### Apply configuration to minions
 You can then run the following commands to log into the Salt Master and begin using Salt.
 ```
+vagrant ssh master
 
 # to test if your minions are responding
 sudo salt '*' test.ping

@@ -13,36 +13,107 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # The box is needed, but not used (ami instead)
   config.vm.box = "dummy"
-  config.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
-  config.vm.synced_folder "saltstack/salt/", "/srv/salt"
-  config.vm.synced_folder "saltstack/pillar/", "/srv/pillar"
+  config.vm.box_url =    "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
 
-  # Provider
-  config.vm.provider :aws do |aws, override|
-    aws.access_key_id = vagrant_secrets['access_key_id']
-    aws.secret_access_key = vagrant_secrets['secret_access_key']
-    aws.keypair_name = "aws-eb2"
-    # AWS AMI: ubuntu xenial64
-    aws.ami = "ami-405f7226"
-    aws.region = "eu-west-1"
-    aws.instance_type = "t2.nano"
-    aws.tags = { 'Name' => 'salt-master' }
-    aws.security_groups = [ 'vagrant' ]
+  config.vm.define :master do |master_config|
+    master_config.vm.synced_folder "saltstack/salt/", "/srv/salt"
+    master_config.vm.synced_folder "saltstack/pillar/", "/srv/pillar"
 
-    override.ssh.username = "ubuntu"
-    override.ssh.private_key_path = "~/.ssh/aws-eb2"
+    # Provider
+    master_config.vm.provider :aws do |aws_master, override|
+      # aws.name = "master"
+      aws_master.access_key_id = vagrant_secrets['access_key_id']
+      aws_master.secret_access_key = vagrant_secrets['secret_access_key']
+      aws_master.keypair_name = "aws-eb2"
+      # AWS AMI: ubuntu xenial64
+      aws_master.ami = "ami-405f7226"
+      aws_master.region = "eu-west-1"
+      aws_master.instance_type = "t2.nano"
+      aws_master.tags = { 'Name' => 'salt-master' }
+      aws_master.security_groups = [ 'vagrant' ]
+
+      override.ssh.username = "ubuntu"
+      override.ssh.private_key_path = "~/.ssh/aws-eb2"
+    end
+
+    # Provisioning
+    master_config.vm.provision :salt do |salt|
+      salt.master_config = "saltstack/etc/salt/master"
+      salt.master_key = "saltstack/keys/master_minion"
+      salt.master_pub = "saltstack/keys/master_minion.pub"
+      salt.minion_key = "saltstack/keys/master_minion"
+      salt.minion_pub = "saltstack/keys/master_minion.pub"
+      salt.seed_master = {
+                          "minion_website" => "saltstack/keys/minion_website.pub",
+                          "minion_etl" => "saltstack/keys/minion_etl.pub"
+                         }
+      salt.install_type = "stable"
+      salt.install_master = true
+      salt.no_minion = true
+      salt.verbose = true
+      salt.colorize = true
+      salt.bootstrap_options = "-P -c /tmp"
+    end
   end
 
-  # Provisioning
-  config.vm.provision :salt do |salt|
-    salt.master_config = "saltstack/etc/master"
-    salt.install_type = "stable"
-    salt.install_master = true
-    salt.no_minion = true
-    salt.verbose = true
-    salt.colorize = true
-    salt.bootstrap_options = "-P -c /tmp"
+  config.vm.define :minion_website do |website_config|
+    # Provider
+    website_config.vm.provider :aws do |aws_website, override|
+      # aws.name = "website_minion"
+      aws_website.access_key_id = vagrant_secrets['access_key_id']
+      aws_website.secret_access_key = vagrant_secrets['secret_access_key']
+      aws_website.keypair_name = "aws-eb2"
+      # AWS AMI: ubuntu xenial64
+      aws_website.ami = "ami-405f7226"
+      aws_website.region = "eu-west-1"
+      aws_website.instance_type = "t2.nano"
+      aws_website.tags = { 'Name' => 'salt-website-minion' }
+      aws_website.security_groups = [ 'vagrant-website' ]
+
+      override.ssh.username = "ubuntu"
+      override.ssh.private_key_path = "~/.ssh/aws-eb2"
+    end
+
+    # Provisioning
+    website_config.vm.provision :salt do |salt|
+      salt.minion_config = "saltstack/etc/salt/minion_website"
+      salt.minion_key = "saltstack/keys/minion_website"
+      salt.minion_pub = "saltstack/keys/minion_website.pub"
+      salt.install_type = "stable"
+      salt.verbose = true
+      salt.colorize = true
+      salt.bootstrap_options = "-P -c /tmp"
+    end
   end
 
+  config.vm.define :minion_etl do |etl_config|
+    # Provider
+    etl_config.vm.provider :aws do |aws_etl, override|
+      # aws.name = "website_minion"
+      aws_etl.access_key_id = vagrant_secrets['access_key_id']
+      aws_etl.secret_access_key = vagrant_secrets['secret_access_key']
+      aws_etl.keypair_name = "aws-eb2"
+      # AWS AMI: ubuntu xenial64
+      aws_etl.ami = "ami-405f7226"
+      aws_etl.region = "eu-west-1"
+      aws_etl.instance_type = "t2.micro"
+      aws_etl.tags = { 'Name' => 'salt-etl-minion' }
+      aws_etl.security_groups = [ 'vagrant' ]
+
+      override.ssh.username = "ubuntu"
+      override.ssh.private_key_path = "~/.ssh/aws-eb2"
+    end
+
+    # Provisioning
+    etl_config.vm.provision :salt do |salt|
+      salt.minion_config = "saltstack/etc/salt/minion_etl"
+      salt.minion_key = "saltstack/keys/minion_etl"
+      salt.minion_pub = "saltstack/keys/minion_etl.pub"
+      salt.install_type = "stable"
+      salt.verbose = true
+      salt.colorize = true
+      salt.bootstrap_options = "-P -c /tmp"
+    end
+  end
 end
 #####################

@@ -16,3 +16,6 @@ hidden/*
 
 # Logs
 *.log
+
+# Keys
+saltstack/keys/*
