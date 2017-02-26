@@ -36,5 +36,5 @@ static-directory_man_2:
 static_environment:
    environ.setenv:
      - name: static
-     - value: {{ pillar['project_static'] }}
+     - value: {{ pillar['project_static'] }}/static
      - update_minion: True

@@ -15,3 +15,8 @@ commons:
       - libbz2-dev
       - libreadline-dev
       - libsqlite3-dev
+
+ntp_service restart:
+  module.run:
+    - name: service.restart
+    - m_name: ntp

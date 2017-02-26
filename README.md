@@ -41,10 +41,14 @@ Then if your application needs somes secrets to be included in your environment 
 ### Apply configuration
 You can then run the following commands to log into the Salt Master and begin using Salt.
 ```
+# ssh into master
 vagrant ssh master
 
+# become sudo user
+sudo su
+
 # to test if your minions are responding
-sudo salt \* test.ping
+sudo salt '*' test.ping
 
 # apply pillar changes
 salt '*' saltutil.refresh_pillar
@@ -88,3 +92,13 @@ I couldn't yet set environment variables for gunicorn. I tryed:
 
 **Ideal solution:**
 - find which command creates automatically this root-owned django.logs
+
+### Bower django
+- current difficulties: permissions, or shell prompt requiring answer
+
+**Current workaround**
+- ssh into minions and run command directly so I can answers prompts
+- use salt's stdin: `salt '*' cmd.run "my command" stdin='one\ntwo\nthree\nfour\nfive\n'`
+
+**Ideal solution**
+- should work with salt states
