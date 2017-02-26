@@ -1,13 +1,5 @@
 # Salt and Vagrant to deploy project
 
-## Why Vagrant AND Salt?
-
-Salt provides a cloud solution to launch EC2 instances and provision them, but requires to have a salt-master with a fixed IP. So it can not be your laptop. The best solution I found is to set up a master on EC2.
-
-The problem was the ability to easily update salt files and configs.
-
-That's where Vagrant provides better functionalities. An important one is the synced_folder. Every change you will make on you local computer will be easily synced on the EC2's salt-master.
-
 
 ## Overview
 The Vagrant files launch a EC2 instance and installs salt-master on it.
@@ -15,6 +7,14 @@ The Vagrant files launch a EC2 instance and installs salt-master on it.
 Then, you will ssh into the salt-master and launch a salt-cloud command which will create two EC2 instance configured as salt-minions:
 - a django application providing a website and an api
 - an application that will regularly extract data from transilien's API, apply transformations, and save what is useful in a Dynamo database.
+
+## Why Vagrant AND Salt?
+
+Salt provides a cloud solution to launch EC2 instances and provision them, but requires to have a salt-master with a fixed IP. So it can not be your laptop. The best solution I found is to set up a master on EC2.
+
+The problem was the ability to easily update salt files and configs.
+
+That's where Vagrant provides better functionalities. An important one is the synced_folder. Every change you will make on you local computer will be easily synced on the EC2's salt-master.
 
 ## Requirements and configuration customization
 
