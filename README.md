@@ -1,31 +1,37 @@
-# Salt and Vagrant demo to deploy a django project
+# Salt and Vagrant to deploy project
 
-The Vagrant part is inspired by https://github.com/UtahDave/salt-vagrant-demo.
+## Why Vagrant AND Salt?
 
-The only change I made on the Vagrant file was to set images to be xenial64 instead of trusty64, in order to get ubuntu 16 instead of ubuntu 14.
+Salt provides a cloud solution to launch EC2 instances and provision them, but requires to have a salt-master with a fixed IP. So it can not be your laptop. The best solution I found is to set up a master on EC2.
 
-The salt states and pillars are configured so you can easily run a django project. The only changes you have to make are to configure:
-- secrets.sls pillar values
-- settings.sls pillar values
+The problem was the ability to easily update salt files and configs.
+
+That's where Vagrant provides better functionalities. An important one is the synced_folder. Every change you will make on you local computer will be easily synced on the EC2's salt-master.
 
 
-## Instructions to set up virtual machines
+## Overview
+The Vagrant files launch a EC2 instance and installs salt-master on it.
 
-Run the following commands in a terminal. Git, VirtualBox and Vagrant must already be installed on your machine.
+Then, you will ssh into the salt-master and launch a salt-cloud command which will create two EC2 instance configured as salt-minions:
+- a django application providing a website and an api
+- an application that will regularly extract data from transilien's API, apply transformations, and save what is useful in a Dynamo database.
+
+## Requirements and configuration customization
+
+### Initial set-up
+Git, VirtualBox and Vagrant must already be installed on your machine.
 
 ```
-git clone https://github.com/leonardbinet/salt-vagrant-django.git
-cd salt-vagrant-django
-vagrant plugin install vagrant-vbguest
-vagrant up
+git clone https://github.com/leonardbinet/salt-vagrant-sncf-project.git
+cd salt-vagrant-sncf-project
 ```
-
-
-This will download an Ubuntu VirtualBox image and create three virtual machines for you. One will be a Salt Master named master and two will be Salt Minions named minion1 and minion2. The Salt Minions will point to the Salt Master and the Minion's keys will already be accepted. Because the keys are pre-generated and reside in the repo, please be sure to regenerate new keys if you use this for production purposes.
-
-## Instructions to configure virtual machines environments
-
 ### Customization
+Then, customize these files according to your needs.
+- vagrant secrets
+- vagrant settings
+- salt secrets: secrets.sls pillar values
+- salt settings: settings.sls pillar values
+
 First, edit 'settings.sls' and 'secrets.sls' pillar files.
 
 The only information you have to provide is: in 'settings.sls'
@@ -38,14 +44,35 @@ The only information you have to provide is: in 'settings.sls'
 
 Then if your application needs somes secrets to be included in your environment variables, just add them to the 'secrets.sls' pillar file.
 
-### Apply configuration
-You can then run the following commands to log into the Salt Master and begin using Salt.
-```
-# ssh into master
-vagrant ssh master
+## Instructions to launch salt-master on EC2 with Vagrant
 
+```
+vagrant plugin install vagrant-vbguest
+vagrant plugin install vagrant-aws
+vagrant up --provider=aws
+```
+
+This will launch an EC2 instance on AWS. This instance will be configured with an ubuntu xenial64 image. It will also be provisioned with salt, so it is configured as a salt master.
+
+Remember that `pillar` and `salt` folder will be synced between your local machine and the remote EC2 instance.
+
+## Instructions to launch salt-minions on EC2 with salt-cloud
+First, connect to salt-master:
+```
+vagrant up --provider=aws
+```
+Then launch salt command:
+```
 # become sudo user
 sudo su
+
+salt blablabal
+```
+
+
+### Apply configuration to minions
+You can then run the following commands to log into the Salt Master and begin using Salt.
+```
 
 # to test if your minions are responding
 sudo salt '*' test.ping
@@ -58,7 +85,7 @@ salt '*' state.apply
 ```
 
 ### Enjoy deploy
-Your website should be available on the minions' IPs:
+The website should be available on the minions' IPs:
 - minion1: 192.168.50.11
 - minion2: 192.168.50.12
 

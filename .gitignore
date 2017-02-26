@@ -4,11 +4,15 @@
 saltstack/salt/secret.json
 saltstack/pillar/secrets.sls
 
+# Vagrant secrets
+secrets.yaml
+
 # Hide my real settings
 saltstack/pillar/settings.sls
 
 # Other files
 reminder.md
+hidden/*
 
 # Logs
 *.log
