@@ -3,7 +3,9 @@
 
 ## Overview
 
-This configuration is suited for a secure deployment with a regular Salt master-minions configuration (all other configurations I've seem were masterless).
+This configuration is suited for a secure deployment with a regular Salt master-minions configuration (in comparison with other demo configurations that I have seen on github that were masterless).
+
+![Overview](images/network-overview.png)
 
 This is the best design I found.
 
@@ -20,6 +22,16 @@ Then, you will ssh into the salt-master and launch states to configure environme
 - a django application providing a website and an api
 - an application that will regularly extract data from transilien's API, apply transformations, and save clean data in a Dynamo database.
 
+## More about the project
+
+This repository is part of a project with SNCF's R&D department.
+
+These configuration will deploy thoses two applications:
+- website/api: [source code here](https://github.com/leonardbinet/SNCF_project_website)
+- ETL: [source code here](https://github.com/leonardbinet/Transilien-Api-ETL)
+
+The project is detailed on the website, available at [this address] (http://www.sncf-departure-time-prediction.info/)
+
 ## Why Vagrant AND Salt?
 
 Salt provides a cloud solution to launch EC2 instances and provision them, but requires to have a salt-master with a fixed IP. So it can not be your laptop. The best solution I found is to set up a master on EC2.
@@ -28,7 +40,7 @@ The problem was the ability to easily update salt files and configs.
 
 That's where Vagrant provides better functionalities. An important one is the synced_folder. Every change you will make on you local computer will be easily synced on the EC2's salt-master.
 
-## Requirements and configuration customization
+## Setup: requirements and configuration customization
 
 ### Initial set-up
 Git, VirtualBox and Vagrant must already be installed on your machine.
@@ -68,14 +80,16 @@ ssh-keygen -t rsa -f ./minion_tel
 ssh-keygen -t rsa -f ./minion_website
 ```
 
-### Set up security groups on AWS
+### Set up AWS ressources
+
+#### Security groups
 For master and etl-minion, you need to open ssh port.
 For website-minion, you need to open also for web traffic.
 
-### Set up elastic_ip on AWS for your master
-Set it in vagrantfile and in minions config files.
+#### Set up elastic_ip on AWS for your master
+Set it in AWS, write it down in vagrantfile and in minions config files.
 
-## Instructions to launch instances on EC2 with Vagrant
+### Launch instances on EC2 with Vagrant
 
 ```
 vagrant plugin install vagrant-vbguest
@@ -87,7 +101,7 @@ This will launch EC2 instances on AWS. They will be configured with ubuntu xenia
 
 Remember that `pillar` and `salt` folder will be synced between your local machine and the remote master EC2 instance.
 
-## Instructions to apply configuration to salt-minions on EC2 with Salt
+### Apply configuration to salt-minions with Salt
 
 You can then run the following commands to log into the Salt Master and begin using Salt.
 ```
@@ -106,7 +120,8 @@ salt '*' state.apply
 ### Enjoy deploy
 The website should be available on the minion_website. You will be able to see its IP on AWS console.
 
-## Requirements on your Django project structure, for custom uses
+## How to use on your own Django projects
+
 If you want to deploy your own django project, these salt states assume:
 - that your application works with python3.5
 - that your python requirements are written on a 'requirements.txt' file, in the root directory of your repo.
