@@ -4,9 +4,12 @@
 require 'yaml'
 
 current_dir = File.dirname(File.expand_path(__FILE__))
-secrets = YAML.load_file("#{current_dir}/secrets.yaml")
+
+secrets = YAML.load_file("#{current_dir}/vagrant_secrets.yaml")
 vagrant_secrets = secrets['secrets']
 
+config = YAML.load_file("#{current_dir}/vagrant_config.yaml")
+vagrant_config = config['config']
 
 VAGRANTFILE_API_VERSION = "2"
 
@@ -24,16 +27,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # aws.name = "master"
       aws_master.access_key_id = vagrant_secrets['access_key_id']
       aws_master.secret_access_key = vagrant_secrets['secret_access_key']
-      aws_master.keypair_name = "aws-eb2"
+      aws_master.keypair_name = vagrant_config['keypair_name']
       # AWS AMI: ubuntu xenial64
-      aws_master.ami = "ami-405f7226"
-      aws_master.region = "eu-west-1"
-      aws_master.instance_type = "t2.nano"
+      aws_master.ami = vagrant_config['ami']
+      aws_master.region = vagrant_config['region']
+      aws_master.instance_type = vagrant_config['master_instance_type']
       aws_master.tags = { 'Name' => 'salt-master' }
-      aws_master.security_groups = [ 'vagrant' ]
-      aws_master.elastic_ip = "34.250.91.247"
+      aws_master.security_groups = [ vagrant_config['master_security_group'] ]
+      aws_master.elastic_ip = vagrant_config['master_elastic_ip']
       override.ssh.username = "ubuntu"
-      override.ssh.private_key_path = "~/.ssh/aws-eb2"
+      override.ssh.private_key_path = vagrant_config['private_key_path']
     end
 
     # Provisioning
@@ -96,7 +99,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # AWS AMI: ubuntu xenial64
       aws_etl.ami = "ami-405f7226"
       aws_etl.region = "eu-west-1"
-      aws_etl.instance_type = "t2.micro"
+      aws_etl.instance_type = "t2.small"
       aws_etl.tags = { 'Name' => 'salt-etl-minion' }
       aws_etl.security_groups = [ 'vagrant' ]
 

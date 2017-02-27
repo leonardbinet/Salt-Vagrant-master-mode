@@ -1,0 +1,15 @@
+# Gunicorn settings
+
+bind = "127.0.0.1:8887"
+log_file = "{{ pillar['project_logs'] }}/gunicorn_logs.txt"
+workers = 3
+
+
+{% set secrets = pillar.get('secrets', {}) -%}
+# Environment variables
+
+raw_env  = [
+    {% for key, value in secrets.items() -%}
+    "{{ key }}={{ value }}",
+    {% endfor -%}
+    ]

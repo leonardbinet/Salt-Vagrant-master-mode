@@ -2,14 +2,23 @@
 
 
 ## Overview
-The Vagrant files launch three EC2 instances:
-- master instance: installs salt-master on it.
-- website-minion instance: installs salt-minion on it.
-- etl-minion instance: installs salt-minion on it.
+
+This configuration is suited for a secure deployment with a regular Salt master-minions configuration (all other configurations I've seem were masterless).
+
+This is the best design I found.
+
+The Vagrant files launch three EC2 instances, (with an existing aws key):
+- master instance: with salt-master installed
+- website-minion instance:  with salt-minion installed
+- etl-minion (extract-transform-load) instance:  with salt-minion installed
+
+Master and minions communicate with others keys created specially for this purpose so that you don't expose your aws key, but still can access each of the instance directly (if the security groups you created allow ssh from other IPs than the master's one).
+
+Vagrant lets you unidirectionally sync folders from your local computer with the master. You can enjoy an easy configuration, and a fixed IP for your master (required for salt-minions to work properly).
 
 Then, you will ssh into the salt-master and launch states to configure environments for:
 - a django application providing a website and an api
-- an application that will regularly extract data from transilien's API, apply transformations, and save what is useful in a Dynamo database.
+- an application that will regularly extract data from transilien's API, apply transformations, and save clean data in a Dynamo database.
 
 ## Why Vagrant AND Salt?
 
@@ -48,15 +57,15 @@ The only information you have to provide is: in 'settings.sls'
 Then if your application needs somes secrets to be included in your environment variables, just add them to the 'secrets.sls' pillar file.
 
 ### Set up your own rsa keys
-These will be used to make your salt master control minions:
+These will be used to make your for salt master and minions to communicate:
 ```
 cd saltstack
 mkdir keys
 cd keys
 
 ssh-keygen -t rsa -f ./master_minion
-ssh-keygen -t rsa -f ./master_minion
-ssh-keygen -t rsa -f ./master_minion
+ssh-keygen -t rsa -f ./minion_tel
+ssh-keygen -t rsa -f ./minion_website
 ```
 
 ### Set up security groups on AWS
@@ -64,7 +73,7 @@ For master and etl-minion, you need to open ssh port.
 For website-minion, you need to open also for web traffic.
 
 ### Set up elastic_ip on AWS for your master
-Set it in vagrantfile and in minions config files
+Set it in vagrantfile and in minions config files.
 
 ## Instructions to launch instances on EC2 with Vagrant
 
@@ -95,31 +104,16 @@ salt '*' state.apply
 ```
 
 ### Enjoy deploy
-The website should be available on the minions' IPs:
-- minion1: 192.168.50.11
-- minion2: 192.168.50.12
+The website should be available on the minion_website. You will be able to see its IP on AWS console.
 
-## Requirements on your Django structure
-In order to work properly, these salt states assume:
+## Requirements on your Django project structure, for custom uses
+If you want to deploy your own django project, these salt states assume:
 - that your application works with python3.5
 - that your python requirements are written on a 'requirements.txt' file, in the root directory of your repo.
-
-About secrets. I've tried to make it easy to add secrets and avoid to add it in your repositories. You can:
-- have your django application read it from environment: in this case you need to add your secrets in the 'secrets.sls' pillar.
+- have your django application read secrets from environment: in this case you need to add your secrets in the 'secrets.sls' pillar, they will be added on gunicorn conf and python virtualenv so they are available.
 
 
 ## TODO
-
-### Secrets handling
-I couldn't yet set environment variables for gunicorn. I tryed:
-- putting it in virtualenv activate script: doesn't work
-- putting it in bashrc or profile.d: didn't work eiter
-
-**Current workaround:**
-- writing it in a json file, that is put in source folder, and read from django settings module
-
-**Ideal solution:**
-- would be to read it directly from environment
 
 ### Logs
 - currently django logs seems to be created by root user, and then cannot be edited by gunicorn's www-data user. (might be collectstatic or bower commands)
@@ -130,12 +124,12 @@ I couldn't yet set environment variables for gunicorn. I tryed:
 **Ideal solution:**
 - find which command creates automatically this root-owned django.logs
 
-### Bower django
+### Bower, and django collectstatic
 - current difficulties: permissions, or shell prompt requiring answer
 
 **Current workaround**
-- ssh into minions and run command directly so I can answers prompts
-- use salt's stdin: `salt '*' cmd.run "my command" stdin='one\ntwo\nthree\nfour\nfive\n'`
+- cmd.run with "activate virtualenv" && "run django bower command"
+- cmd.run with "activate virtualenv" && "run collectstatic command"
 
 **Ideal solution**
-- should work with salt states
+- should work with builtin salt states

@@ -1,5 +1,5 @@
-include:
-  - system.python_from_source
+#include:
+#  - system.python_from_source
 
 other_python:
   pkg.installed:
@@ -9,5 +9,5 @@ other_python:
       - python3-dev # those two might not be necessary
       - python3-pip #
       - python-virtualenv
-    - require:
-      - python-install
+#    - require:
+#      - python-install

@@ -1,13 +1,3 @@
-#include:
-#  - website.venv_requirements
-#
-#gunicorn installed:
-#  pip.installed:
-#    - name: gunicorn
-#    - bin_env: /home/ubuntu/sites/{{ pillar['project_name'] }}/virtualenv/
-#    - require:
-#      - create and update python virtualenv
-
 gunicorn service file:
   file.managed:
     - name: /etc/systemd/system/gunicorn_{{ pillar['project_name'] }}.service
@@ -15,8 +5,14 @@ gunicorn service file:
     - source: salt://website/gunicorn_service.jinga
     - user: {{ pillar['user'] }}
     - group: {{ pillar['group'] }}
-#    - require:
-#      - gunicorn installed
+
+gunicorn conf file:
+  file.managed:
+    - name: {{ pillar['project_conf'] }}/gunicorn_conf.py
+    - template: jinja
+    - source: salt://website/gunicorn_conf.jinga
+    - user: {{ pillar['user'] }}
+    - group: {{ pillar['group'] }}
 
 gunicorn_service running:
   service.running:

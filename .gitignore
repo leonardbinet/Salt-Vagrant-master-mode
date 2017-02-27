@@ -5,7 +5,7 @@ saltstack/salt/secret.json
 saltstack/pillar/secrets.sls
 
 # Vagrant secrets
-secrets.yaml
+vagrant_secrets.yaml
 
 # Hide my real settings
 saltstack/pillar/settings.sls

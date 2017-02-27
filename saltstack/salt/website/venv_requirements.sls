@@ -6,13 +6,14 @@ include:
 
 delete possible failed builds:
   file.absent:
-    - name: /home/ubuntu/sites/{{ pillar['project_name'] }}/virtualenv/build/
+    - name: {{ pillar['project_venv'] }}/build/
 
 create and update python virtualenv:
   virtualenv.managed:
-    - name: /home/ubuntu/sites/{{ pillar['project_name'] }}/virtualenv
+    - name: {{ pillar['project_venv'] }}
     - venv_bin: /usr/bin/virtualenv
-    - python: /opt/python/bin/python3.5
+    - python: /usr/bin/python3
+    # /opt/python/bin/python3.5, if python3 is created from source
     - env_vars:
       - DJANGO_SETTINGS_MODULE: {{ pillar['DJANGO_SETTINGS_MODULE'] }}
       {% for key, value in secrets.items() -%}
@@ -24,8 +25,8 @@ create and update python virtualenv:
 
 install dependencies:
   pip.installed:
-    - requirements: /home/ubuntu/sites/{{ pillar['project_name'] }}/source/requirements.txt
-    - bin_env: /home/ubuntu/sites/{{ pillar['project_name'] }}/virtualenv/
+    - requirements: {{ pillar['project_source'] }}/requirements.txt
+    - bin_env: {{ pillar['project_venv'] }}
     - require:
       - create and update python virtualenv
       - website source code

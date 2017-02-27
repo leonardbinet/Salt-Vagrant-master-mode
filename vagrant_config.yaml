@@ -1,0 +1,10 @@
+---
+config:
+  keypair_name: "aws-eb2"
+  private_key_path: "~/.ssh/aws-eb2"
+  ami: "ami-405f7226"
+  region: "eu-west-1"
+
+  master_instance_type: "t2.micro"
+  master_security_group: 'vagrant'
+  master_elastic_ip: "34.250.91.247"
