@@ -31,7 +31,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       aws_master.instance_type = "t2.nano"
       aws_master.tags = { 'Name' => 'salt-master' }
       aws_master.security_groups = [ 'vagrant' ]
-
+      aws_master.elastic_ip = "34.250.91.247"
       override.ssh.username = "ubuntu"
       override.ssh.private_key_path = "~/.ssh/aws-eb2"
     end

@@ -47,6 +47,25 @@ The only information you have to provide is: in 'settings.sls'
 
 Then if your application needs somes secrets to be included in your environment variables, just add them to the 'secrets.sls' pillar file.
 
+### Set up your own rsa keys
+These will be used to make your salt master control minions:
+```
+cd saltstack
+mkdir keys
+cd keys
+
+ssh-keygen -t rsa -f ./master_minion
+ssh-keygen -t rsa -f ./master_minion
+ssh-keygen -t rsa -f ./master_minion
+```
+
+### Set up security groups on AWS
+For master and etl-minion, you need to open ssh port.
+For website-minion, you need to open also for web traffic.
+
+### Set up elastic_ip on AWS for your master
+Set it in vagrantfile and in minions config files
+
 ## Instructions to launch instances on EC2 with Vagrant
 
 ```
