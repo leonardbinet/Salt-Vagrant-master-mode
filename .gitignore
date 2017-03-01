@@ -1,14 +1,11 @@
 .vagrant
 
 # Secrets: hide my real secrets
-saltstack/salt/secret.json
 saltstack/pillar/secrets.sls
 
 # Vagrant secrets
 vagrant_secrets.yaml
 
-# Hide my real settings
-saltstack/pillar/settings.sls
 
 # Other files
 reminder.md
