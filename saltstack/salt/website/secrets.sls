@@ -20,9 +20,9 @@
 
 
 # Set secrets file
-file.managed:
-  - name: {{ pillar['project_source'] }}/secret.json
-  #- template: jinja
-  - source: salt://secret.json
-  - user: {{ pillar['user'] }}
-  - group: {{ pillar['group'] }}
+#file.managed:
+#  - name: {{ pillar['project_source'] }}/secret.json
+#  #- template: jinja
+#  - source: salt://secret.json
+#  - user: {{ pillar['user'] }}
+#  - group: {{ pillar['group'] }}
