@@ -101,6 +101,7 @@ This will launch EC2 instances on AWS. They will be configured with ubuntu xenia
 
 Remember that `pillar` and `salt` folder will be synced between your local machine and the remote master EC2 instance.
 
+
 ### Apply configuration to salt-minions with Salt
 
 You can then run the following commands to log into the Salt Master and begin using Salt.
@@ -118,7 +119,52 @@ salt '*' state.apply
 ```
 
 ### Enjoy deploy
-The website should be available on the minion_website. You will be able to see its IP on AWS console.
+The website should be available on the minion_website. You will be able to see its IP on AWS console but you can also get them from Vagrant.
+
+To get instances IP's:
+```
+vagrant ssh-config
+```
+
+### Configure Jenkins
+You can access Jenkins on 'minion_etl' instance on port 8080.
+```
+ip_address_obtained_with_vagrant:8080
+```
+
+It will ask for a password saved on instance, to get it:
+```
+vagrant ssh minion_etl
+cat /var/lib/jenkins/secrets/initialAdminPassword
+```
+
+And follow instructions.
+
+You can for instance add the following tasks as pipelines:
+```
+# Planning
+# Every 2 min
+*/2 * * * *
+
+# Script
+/home/ubuntu/application/SNCF_project/virtualenv/bin/python /home/ubuntu/application/SNCF_project/source/tasks/extract_api_once_all_stations.py
+
+# Planning
+# Every day at 11:00PM
+0 23 * * *
+
+# Script
+/home/ubuntu/application/SNCF_project/virtualenv/bin/python /home/ubuntu/application/SNCF_project/source/tasks/extract_day_schedule.py
+
+# Planning
+# Every week on Monday at 5:30 AM
+30 5 * * 1
+
+# Script
+/home/ubuntu/application/SNCF_project/virtualenv/bin/python /home/ubuntu/application/SNCF_project/source/tasks/download_gtfs_files.py
+
+```
+
 
 ## How to use on your own Django projects
 

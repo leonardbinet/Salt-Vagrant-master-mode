@@ -15,7 +15,6 @@ gitfs_remotes:
 - git://github.com/saltstack-formulas/node-formula
 - git://github.com/saltstack-formulas/jenkins-formula
 
-
 ##### Primary configuration settings #####
 ##########################################
 # This configuration file is used to manage the behavior of the Salt Master.
