@@ -30,7 +30,7 @@ These configuration will deploy thoses two applications:
 - website/api: [source code here](https://github.com/leonardbinet/SNCF_project_website)
 - ETL: [source code here](https://github.com/leonardbinet/Transilien-Api-ETL)
 
-The project is detailed on the website, available at [this address] (http://www.sncf-departure-time-prediction.info/)
+The project is detailed on the website, available at [this address] (http://departure-time-prediction-project.com/)
 
 ## Why Vagrant AND Salt?
 
