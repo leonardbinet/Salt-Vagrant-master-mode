@@ -6,5 +6,8 @@ config:
   region: "eu-west-1"
 
   master_instance_type: "t2.micro"
+  minion_etl_instance_type: "t2.small"
+  minion_website_instance_type: "t2.nano"
+
   master_security_group: 'vagrant'
   master_elastic_ip: "34.250.91.247"

@@ -65,16 +65,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # aws.name = "website_minion"
       aws_website.access_key_id = vagrant_secrets['access_key_id']
       aws_website.secret_access_key = vagrant_secrets['secret_access_key']
-      aws_website.keypair_name = "aws-eb2"
+      aws_website.keypair_name = vagrant_config['keypair_name']
       # AWS AMI: ubuntu xenial64
-      aws_website.ami = "ami-405f7226"
-      aws_website.region = "eu-west-1"
-      aws_website.instance_type = "t2.nano"
+      aws_website.ami = vagrant_config['ami']
+      aws_website.region = vagrant_config['region']
+      aws_website.instance_type = vagrant_config['minion_website_instance_type']
       aws_website.tags = { 'Name' => 'salt-website-minion' }
       aws_website.security_groups = [ 'vagrant-website' ]
 
       override.ssh.username = "ubuntu"
-      override.ssh.private_key_path = "~/.ssh/aws-eb2"
+      override.ssh.private_key_path = vagrant_config['private_key_path']
     end
 
     # Provisioning
@@ -95,16 +95,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # aws.name = "website_minion"
       aws_etl.access_key_id = vagrant_secrets['access_key_id']
       aws_etl.secret_access_key = vagrant_secrets['secret_access_key']
-      aws_etl.keypair_name = "aws-eb2"
+      aws_etl.keypair_name = vagrant_config['keypair_name']
       # AWS AMI: ubuntu xenial64
-      aws_etl.ami = "ami-405f7226"
-      aws_etl.region = "eu-west-1"
-      aws_etl.instance_type = "t2.small"
+      aws_etl.ami = vagrant_config['ami']
+      aws_etl.region = vagrant_config['region']
+      aws_etl.instance_type = vagrant_config['minion_etl_instance_type']
       aws_etl.tags = { 'Name' => 'salt-etl-minion' }
       aws_etl.security_groups = [ 'vagrant' ]
 
       override.ssh.username = "ubuntu"
-      override.ssh.private_key_path = "~/.ssh/aws-eb2"
+      override.ssh.private_key_path = vagrant_config['private_key_path']
     end
 
     # Provisioning
