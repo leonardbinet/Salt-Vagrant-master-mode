@@ -10,6 +10,9 @@ config:
   minion_website_instance_type: "t2.nano"
 
   master_security_group: 'vagrant'
+  minion_website_security_group: "vagrant-website"
+  minion_etl_security_group: "vagrant-website"
+
   master_elastic_ip: "34.250.91.247"
   minion_website_elastic_ip: "34.251.111.102"
   minion_etl_elastic_ip: "34.251.173.101"

@@ -71,7 +71,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       aws_website.region = vagrant_config['region']
       aws_website.instance_type = vagrant_config['minion_website_instance_type']
       aws_website.tags = { 'Name' => 'salt-website-minion' }
-      aws_website.security_groups = [ 'vagrant-website' ]
+      aws_website.security_groups = [ vagrant_config['minion_website_security_group'] ]
       aws_website.elastic_ip = vagrant_config['minion_website_elastic_ip']
 
       override.ssh.username = "ubuntu"
@@ -102,7 +102,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       aws_etl.region = vagrant_config['region']
       aws_etl.instance_type = vagrant_config['minion_etl_instance_type']
       aws_etl.tags = { 'Name' => 'salt-etl-minion' }
-      aws_etl.security_groups = [ 'vagrant-website' ]
+      aws_etl.security_groups = [ vagrant_config['minion_etl_security_group'] ]
       aws_etl.elastic_ip = vagrant_config['minion_etl_elastic_ip']
 
       override.ssh.username = "ubuntu"
