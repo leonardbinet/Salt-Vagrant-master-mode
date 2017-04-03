@@ -1,0 +1,14 @@
+[Unit]
+Description=Celery Service
+After=network.target
+
+[Service]
+Type=forking
+User=celery
+Group=celery
+EnvironmentFile=-/etc/conf.d/celery
+WorkingDirectory={{ pillar['project_source'] }}
+ExecStart={{ pillar['project_venv'] }}/bin/celery multi start w1 -A etl_tasks.celery_app --logfile={{ pillar['project_logs'] }}/celery/%N.log --pidfile=/var/run/celery/%N.pid
+
+[Install]
+WantedBy=multi-user.target

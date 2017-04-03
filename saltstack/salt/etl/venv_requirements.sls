@@ -3,11 +3,11 @@
 include:
   - system.other_python
 
-delete possible failed builds:
+etl delete possible failed builds:
   file.absent:
     - name: {{ pillar['project_venv'] }}/build/
 
-create and update python virtualenv:
+etl create and update python virtualenv:
   virtualenv.managed:
     - name: {{ pillar['project_venv'] }}
     - venv_bin: /usr/bin/virtualenv
@@ -18,11 +18,11 @@ create and update python virtualenv:
       - {{ key }}: {{ value }}
       {% endfor -%}
     - require:
-      - delete possible failed builds
+      - etl delete possible failed builds
 
-install dependencies:
+etl install dependencies:
   pip.installed:
     - requirements: {{ pillar['project_source'] }}/requirements.txt
     - bin_env: {{ pillar['project_venv'] }}
     - require:
-      - create and update python virtualenv
+      - etl create and update python virtualenv

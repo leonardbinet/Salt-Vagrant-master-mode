@@ -1,0 +1,12 @@
+[Unit]
+Description=CeleryFlower Service
+After=network.target
+
+[Service]
+User=celery
+Group=celery
+WorkingDirectory={{ pillar['project_source'] }}
+ExecStart={{ pillar['project_venv'] }}/bin/flower -A etl_tasks.celery_app --port=5555
+
+[Install]
+WantedBy=multi-user.target

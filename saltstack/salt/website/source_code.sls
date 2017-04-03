@@ -3,4 +3,5 @@ website source code:
     - name: {{ pillar['website_git_repo'] }}
     - branch: {{ pillar['website_git_rev'] }}
     - target: {{ pillar['project_source'] }}
-    - force_reset: True
+    - force_reset: true
+    - force_clone: true

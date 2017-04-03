@@ -7,7 +7,7 @@ bower install:
 
 # Does not work properly: still here to help debugging later
 # If error:
-# /home/ubuntu/sites/SNCF_project/virtualenv/bin/python /home/ubuntu/sites/SNCF_project/source/manage.py bower install
+# /home/ubuntu/application/SNCF_project/virtualenv/bin/python /home/ubuntu/application/SNCF_project/source/manage.py collectstatic
 cmd_update_bower_files:
   cmd.run:
     - runas: ubuntu
@@ -47,11 +47,15 @@ update_static_files:
     - settings_module: {{ pillar['DJANGO_SETTINGS_MODULE'] }}
     - bin_env: {{ pillar['project_venv'] }}
     - pythonpath: {{ pillar['project_source'] }}
+    - env:
+      - STATIC_ROOT: {{ pillar['project_static'] }}/static
 
 cmd_update_static_files:
   cmd.run:
     - runas: {{ pillar['user'] }}
     - name: ". {{ pillar['project_venv'] }}/bin/activate && python {{ pillar['project_source'] }}/manage.py collectstatic --no-input"
+    - env:
+      - STATIC_ROOT: {{ pillar['project_static'] }}/static
     - require:
       - cmd_update_bower_files
       - django logs file

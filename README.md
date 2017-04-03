@@ -142,6 +142,15 @@ And follow instructions.
 
 You can for instance add the following tasks as pipelines:
 ```
+node {
+    stage "Extract one cycle (2 mins)"
+
+    sh "sudo /home/ubuntu/application/SNCF_project/virtualenv/bin/python /home/ubuntu/application/SNCF_project/source/tasks/extract_api_once_all_stations.py"
+
+}
+
+
+
 # Planning
 # Every 2 min
 */2 * * * *

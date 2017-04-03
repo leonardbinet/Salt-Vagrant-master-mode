@@ -33,8 +33,8 @@ static-directory_man_2:
     - group: www-data
     - mode: 777
 
-static_environment:
+static_environment django:
    environ.setenv:
-     - name: static
+     - name: STATIC_ROOT
      - value: {{ pillar['project_static'] }}/static
      - update_minion: True

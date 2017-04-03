@@ -5,15 +5,14 @@ base:
     # - system.python_from_source:
     - system.other_python
     - system.secrets_file
+    - system.directory
 
   'minion_website':
     - node
     - nginx.ng
     - nginx.ng.config
     - nginx.ng.service
-    - website.directory
     - website.source_code
-    - website.venv_requirements
 #   - website.secrets
     - website.nginx
     - website.gunicorn
@@ -22,14 +21,6 @@ base:
 
   'minion_etl':
     - etl.source_code
-    - etl.directory
     - etl.jenkins
     - etl.venv_requirements
-
-    #- nginx.ng
-    #- nginx.ng.config
-    #- nginx.ng.service
-    #- etl.nginx
-    #- jenkins.nginx
-
-    # need to provide secrets through env variables
+    - etl.celery

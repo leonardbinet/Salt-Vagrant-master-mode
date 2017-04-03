@@ -1,0 +1,12 @@
+[Unit]
+Description=Celery Beat Service
+After=network.target
+
+[Service]
+User=celery
+Group=celery
+WorkingDirectory={{ pillar['project_source'] }}
+ExecStart={{ pillar['project_venv'] }}/bin/celery -A etl_tasks.celery_app beat --logfile={{ pillar['project_logs'] }}/celery/%N.log -s /var/run/celery/celerybeat-schedule --pidfile=/var/run/celery/%N.pid
+
+[Install]
+WantedBy=multi-user.target
