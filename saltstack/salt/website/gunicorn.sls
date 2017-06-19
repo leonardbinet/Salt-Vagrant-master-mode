@@ -1,3 +1,6 @@
+include:
+  - website.source_code
+
 gunicorn service file:
   file.managed:
     - name: /etc/systemd/system/gunicorn_{{ pillar['project_name'] }}.service
@@ -19,5 +22,7 @@ gunicorn_service running:
     - name: gunicorn_{{ pillar['project_name'] }}
     - enable: True
     - reload: True
+    - watch:
+        - website source code
     - require:
       - file: gunicorn service file

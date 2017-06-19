@@ -98,6 +98,8 @@ celery_service running:
     - name: celery
     - enable: True
     - reload: True
+    - watch:
+        - celery service file
     - require:
       - file: celery conf file
       - file: celery service file
@@ -108,6 +110,8 @@ celerybeat_service running:
     - name: celerybeat
     - enable: True
     - reload: True
+    - watch:
+        - celerybeat service file
     - require:
       - file: celery conf file
       - file: celerybeat service file
@@ -118,6 +122,8 @@ celeryflower_service running:
     - name: celeryflower
     - enable: True
     - reload: True
+    - watch:
+        - celeryflower service file
     - require:
       - file: celeryflower service file
       - rabbitmq-server running

@@ -1,4 +1,5 @@
 .vagrant
+.idea
 
 # Secrets: hide my real secrets
 saltstack/pillar/secrets.sls

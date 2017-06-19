@@ -17,8 +17,6 @@ cmd_update_bower_files:
       - bower install
       - components-directory
 
-
-
 components-directory:
   file.directory:
     - name: {{ pillar['project_source'] }}/components/bower_components
@@ -39,16 +37,16 @@ django logs file:
 
 
 # Two commands to try to do the same thing
-# Requirements: use django prod settings: DJANGO_SETTINGS_MODULE -> prod
-update_static_files:
-  module.run:
-    - runas: {{ pillar['user'] }}
-    - name: django.collectstatic
-    - settings_module: {{ pillar['DJANGO_SETTINGS_MODULE'] }}
-    - bin_env: {{ pillar['project_venv'] }}
-    - pythonpath: {{ pillar['project_source'] }}
-    - env:
-      - STATIC_ROOT: {{ pillar['project_static'] }}/static
+#  use django prod settings: DJANGO_SETTINGS_MODULE -> prod
+# update_static_files:
+#  module.run:
+#    - runas: {{ pillar['user'] }}
+#    - name: django.collectstatic
+#    - settings_module: {{ pillar['DJANGO_SETTINGS_MODULE'] }}
+#    - bin_env: {{ pillar['project_venv'] }}
+#    - pythonpath: {{ pillar['project_source'] }}
+#    - env:
+#      - STATIC_ROOT: {{ pillar['project_static'] }}/static
 
 cmd_update_static_files:
   cmd.run:

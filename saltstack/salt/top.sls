@@ -21,6 +21,11 @@ base:
 
   'minion_etl':
     - etl.source_code
-    - etl.jenkins
     - etl.venv_requirements
+    - etl.jenkins
     - etl.celery
+    - etl.refresh
+
+  'minion_worker':
+    - etl.source_code
+    - etl.venv_requirements

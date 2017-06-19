@@ -7,12 +7,15 @@ config:
 
   master_instance_type: "t2.micro"
   minion_etl_instance_type: "t2.small"
-  minion_website_instance_type: "t2.nano"
+  minion_website_instance_type: "t2.micro"
+  minion_worker_instance_type: "t2.small"
 
   master_security_group: 'vagrant'
   minion_website_security_group: "vagrant-website"
   minion_etl_security_group: "vagrant-website"
+  minion_worker_security_group: "vagrant-website"
 
   master_elastic_ip: "34.250.91.247"
-  minion_website_elastic_ip: "34.251.111.102"
   minion_etl_elastic_ip: "34.251.173.101"
+  minion_worker_elastic_ip: "54.77.224.134"
+  minion_website_elastic_ip: "34.251.111.102"

@@ -15,11 +15,18 @@ website create and update python virtualenv:
       - {{ key }}: {{ value }}
       {% endfor -%}
     - require:
-      - etl delete possible failed builds
+      - website delete possible failed builds
 
 website install dependencies:
   pip.installed:
-    - requirements: {{ pillar['project_source'] }}/requirements.txt
+    - requirements: {{ pillar['project_source'] }}/requirements/prod.txt
     - bin_env: {{ pillar['project_venv'] }}
     - require:
-      - etl create and update python virtualenv
+      - website create and update python virtualenv
+
+api_etl install dependencies:
+  pip.installed:
+    - requirements: {{ pillar['project_source'] }}/lib/requirements.txt
+    - bin_env: {{ pillar['project_venv'] }}
+    - require:
+      - website create and update python virtualenv

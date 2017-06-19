@@ -6,7 +6,7 @@ After=network.target
 User=celery
 Group=celery
 WorkingDirectory={{ pillar['project_source'] }}
-ExecStart={{ pillar['project_venv'] }}/bin/flower -A etl_tasks.celery_app --port=5555
+ExecStart={{ pillar['project_venv'] }}/bin/flower -A etl_tasks.celery_app --port=5555 --basic_auth={{ pillar['secrets']['FLOWER_USER'] }}:{{ pillar['secrets']['FLOWER_PASSWORD'] }}
 
 [Install]
 WantedBy=multi-user.target
