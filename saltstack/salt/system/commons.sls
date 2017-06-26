@@ -15,6 +15,8 @@ commons:
       - libbz2-dev
       - libreadline-dev
       - libsqlite3-dev
+      # tinker: for matplotlib
+      - python3-tk
 
 ntp_service restart:
   module.run:
